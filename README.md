@@ -26,7 +26,7 @@ This might seem like a minor problem, but the effect is significant.  If the maj
 
 However, for a pool that happens to reside on the other side of the world where network delays might be just over 1 second, this pool will suffer "fork battles" not only with pools awarded the same slot, but also the slot before, and the slot after.  In other words, this geographically decentralised pool will suffer 3 times the number of slot battles, amounting to 15% of its blocks, and resulting in 7.5% of its blocks getting dropped.  The numbers are even worse for a pool suffering 2 second network delays because it will suffer 5 times the number of "fork battles" and see 12.5% of its blocks "orphaned".  This not only results in an unfair reduction in rewards, but also the same magnitude reduction in contribution to the ledger.
 
-Even the high quality infrastructure of a first world country like Australia is not enough to reliably overcome this problem due to its geographical location.  But is it reasonable to expect all block producers across the world to receive blocks in under one second whenever the internet becomes congested, or if block size is increased following parameter changes?  Unfortunately, the penalty for a block producer than cannot sustain this remarkable feat of less than 1 second block receipt and propagation, is 3 times as many "fork battles" resulting in 7.5% "orphaned" blocks rather than 2.5%.
+Even the high quality infrastructure of a first world country like Australia is not enough to reliably overcome this problem due to its geographical location.  But is it reasonable to expect all block producers across the world to receive blocks in under one second whenever the internet becomes congested, or if block size is increased following parameter changes?  Unfortunately, the penalty for a block producer that cannot sustain this remarkable feat of less than 1 second block receipt and propagation, is 3 times as many "fork battles" resulting in 7.5% "orphaned" blocks rather than 2.5%.
 
 Considering that most stake pools are competing over 1% or less in fees, these are big numbers.  The obvious solution for the remote pool is to move its block producer to a server housed in USA or Europe.  This illustrates not only the centralisation problem created, but also the reduction in security that flows from running a block producer on someone elses computing hardware.
 
@@ -36,7 +36,7 @@ Cardano should live up to its [11 blockchain tenets](<https://iohk.io/en/blog/po
 ## Possible Solutions
 1. Modify how stake pools calculate their slot leadership by including ```mod 2``` or ```mod 3``` in the formula so that only every second or third slot is a possible leader slot.  Then adjust other parameters so that the Cardano network still produces a block every 20 seconds on average.
 
-  A consequence of this change would be an increased number of true "slot battles", where two pools are awarded the exact same slot.  However such battles are fairly settled by preferring the lowest block VRF and cannot be gamed by a malicious actor.
+    A consequence of this change would be an increased number of true "slot battles", where two pools are awarded the exact same slot.  However such battles are fairly settled by preferring the lowest block VRF and cannot be gamed by a malicious actor.
 
 2. Increase the slot duration to 2 or 3 seconds.  However this could have consequences for dapps that have assumed a slot will always be 1 second.
 
@@ -52,6 +52,29 @@ Cardano should live up to its [11 blockchain tenets](<https://iohk.io/en/blog/po
 5. Would it be appropriate to make the window in which the block VRF tie breaker rule is applied also the same 2 or 3 seconds so that only blocks with the exact same slot number are deterministicly settled using the block VRF, otherwise the node would prefer its current block?  Such a change would remove the ability of malicious actors to deliberately cause a fork with the previous block when they know their block VRF is lower.
 
 6. What effect could any change have on the solution to [issue #2913: Consensus should favor expected slot height to ward off delay attack](<https://github.com/IntersectMBO/ouroboros-network/issues/2913>)?
+
+## Arguments against correcting this unfairness
+1. It doesn't matter where the block producer is warehoused because block production is like a virtual service that can be run from anywhere.  What really matters is ownership of the pledge and stake, not ownership of the computing hardware.  If you live on the other side of the world, just rent a virtual server in Frankfurt or Los Angeles for your block producer.
+
+- Centralising Cardano infrastructure to data centres potentially hands control over the software, as well as differential control over the block transmission between nodes, to the BigTech data centre owners.
+
+2. The internet infrastructure is centred in USA and USA is more politically stable and less likely to have its internet infrastructure compromised through acts of war.  If conflict between USA, China, and Russia ensues then the undersea cables to Japan, Australia and New Zealand could get damaged.  Therefore it makes sense that Cardano block production should be slightly advantaged in USA and slightly disadvantaged in Japan, Australia and New Zealand.
+
+- Japan, Australia and New Zealand are very politically stable and it might actually be a good idea to _fairly_ incentivise participation from people living in those areas.  If internet connectivity was to be affected by cyber warfare, the targets of such attacks may not be predictable anyway.
+
+- The bottom line is that if I have 0.001% of stake in the system then I should get 0.001% of access to the system.  Likewise with scaling that up, if good actors possess 51% of the stake then they should have 51% of the control, as this is a fundamental assumption protecting Cardano.  I hope that the Cardano community won't step away from this fundamental mathematics based approach in favour of some sort of subjective human inference about where they think block producers should be warehoused for political or other reasons.
+
+3. Internet transmission is improving so in the future 1 second might be sufficient for block propagation across the entire globe.
+
+- This unfairness problem doesn't seem hard to fix.  If / when internet speeds improve then it should be straightforward to recalibrate the software again.
+
+4. Won't halving or one-third'ing the number of potential leader slots reduce the number of blocks and therefore reduce the throughput?
+
+- Possible solution 1 also involves adjusting other parameters so that the target rate of block production remains unchanged.  Actually, it seems likely that the realised throughput would slightly increase.  The reason for this is that [possible solution 1](#Possible-Solutions) would eliminate forks caused by 1 second propagation delays which currently cause lost throughput.
+
+5. If my pool is located close to the majority then I am benefitting from this unfairness so why should I vote for this to be fixed?
+
+- See section: [Goals](#Goals)
 
 ## Copyright
 This CIP is licensed under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode).
